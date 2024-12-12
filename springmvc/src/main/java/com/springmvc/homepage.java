@@ -9,11 +9,14 @@ public class homepage {
 	
 	@RequestMapping("/home")
 	public String home(Model model) {
-		System.out.println("Hiiiiiiiiiiiiiiiii");
+		System.out.println("Hiiiiiiiiiiiiiiiii");        
 		
 		model.addAttribute("name","rushi");
 		return "index";
 	}
+	
+	
+	
 	
 	@RequestMapping("/about")
 	public String about() {
