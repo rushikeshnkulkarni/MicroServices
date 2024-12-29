@@ -7,6 +7,17 @@ public class rating {
 	private String hotelId;
 	private int rating;
 	private String feedback;
+
+	private hotel hotel;
+
+	public hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(hotel hotel) {
+		this.hotel = hotel;
+	}
+
 	public String getRatingId() {
 		return ratingId;
 	}

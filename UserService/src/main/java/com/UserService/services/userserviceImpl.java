@@ -1,13 +1,17 @@
 package com.UserService.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import com.UserService.entity.hotel;
 import org.apache.commons.logging.LogFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,9 +53,22 @@ public class userserviceImpl implements userservice {
 		//return userRepository.findById(userId).orElseThrow(()-> new resourseNotFoundException("id is not found with id"+userId));
 		 User user  =userRepository.findById(userId).orElse(null);
 		 
-		ArrayList<rating> forobjectArrayList=   restTemplate.getForObject("http://localhost:8083/ratings/users/"+user.getUserId(), ArrayList.class);
+		rating[] forobjectArrayList=   restTemplate.getForObject("http://RATINGSERVICE/ratings/users/"+user.getUserId(), rating[].class);
 		 logger.info("{} ",forobjectArrayList);
-		 user.setRating(forobjectArrayList);
+
+		 List<rating> ratings= Arrays.stream((forobjectArrayList)).toList();
+
+		List<rating> ratingList =ratings.stream().map(rating -> {
+
+			ResponseEntity<hotel> forentity= restTemplate.getForEntity("http://HOTELSERVICE/hotels/"+rating.getHotelId(),hotel.class);
+
+			hotel body=forentity.getBody();
+
+			rating.setHotel(body);
+			return rating;
+		}).collect(Collectors.toList());
+
+		 user.setRating(ratingList);
 		   return user;
 
 	}
