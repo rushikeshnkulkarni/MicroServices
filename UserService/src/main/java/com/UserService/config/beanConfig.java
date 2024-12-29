@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import com.UserService.entity.hotel;
+import com.UserService.externalServices.HotelService;
+
 @Configuration
 public class beanConfig {
 	
@@ -14,5 +17,8 @@ public class beanConfig {
 		
 		return new RestTemplate();
 	}
+	
+	
+
 
 }

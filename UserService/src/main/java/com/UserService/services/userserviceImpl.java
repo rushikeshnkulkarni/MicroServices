@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import com.UserService.entity.User;
 import com.UserService.entity.rating;
 import com.UserService.exception.resourseNotFoundException;
+import com.UserService.externalServices.HotelService;
 import com.UserService.repository.userRepository;
 
 @Service
@@ -28,6 +29,8 @@ public class userserviceImpl implements userservice {
 	
 	@Autowired
 	RestTemplate restTemplate;
+	
+	
 	
 	org.slf4j.Logger logger = LoggerFactory.getLogger(userserviceImpl.class);
 	
@@ -60,9 +63,9 @@ public class userserviceImpl implements userservice {
 
 		List<rating> ratingList =ratings.stream().map(rating -> {
 
-			ResponseEntity<hotel> forentity= restTemplate.getForEntity("http://HOTELSERVICE/hotels/"+rating.getHotelId(),hotel.class);
+			 	ResponseEntity<hotel> forentity= restTemplate.getForEntity("http://HOTELSERVICE/hotels/"+rating.getHotelId(),hotel.class);
 
-			hotel body=forentity.getBody();
+			hotel body=   forentity.getBody();
 
 			rating.setHotel(body);
 			return rating;
