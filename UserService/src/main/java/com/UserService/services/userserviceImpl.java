@@ -29,8 +29,7 @@ public class userserviceImpl implements userservice {
 	
 	@Autowired
 	RestTemplate restTemplate;
-	
-	
+
 	
 	org.slf4j.Logger logger = LoggerFactory.getLogger(userserviceImpl.class);
 	

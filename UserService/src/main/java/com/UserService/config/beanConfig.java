@@ -17,8 +17,5 @@ public class beanConfig {
 		
 		return new RestTemplate();
 	}
-	
-	
-
 
 }
