@@ -58,5 +58,13 @@ public class User {
 		this.rating = rating;
 	}
 
-	
+	public User(String userId, String name, String email, List<com.UserService.entity.rating> rating) {
+		UserId = userId;
+		Name = name;
+		this.email = email;
+		this.rating = rating;
+	}
+
+	public User() {
+	}
 }

@@ -1,0 +1,87 @@
+## Application properties for UserService
+#
+#spring.application.name=UserService
+#server.port=8081
+#
+## DataSource Configuration
+#spring.datasource.url=jdbc:mysql://localhost:3306/microservices
+#spring.datasource.username=root
+#spring.datasource.password=system
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#
+## JPA/Hibernate Configuration
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.show-sql=true
+#
+## Eureka Configuration
+##eureka.client.registerWithEureka=true
+##eureka.client.fetchRegistry=true
+##eureka.client.serviceUrl.defaultZone=http://localhost:8084/eureka/
+#
+## Optional: JPA specific properties
+#spring.jpa.properties.hibernate.format_sql=true
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+#
+##spring.profiles.active=prod
+#spring.config.import=optional:configserver:http://localhost:8087
+#
+#management.health.circuitbreakers.enabled=true
+#management.endpoints.web.exposure.include=health
+#management.endpoint.health.show-details: "ALWAYS"
+#resilience4j.circuitbreaker.configs.default.registerHealthIndicator: true
+
+# Application properties for UserService
+
+spring:
+  application:
+    name: UserService
+  datasource:
+    url: jdbc:mysql://localhost:3306/microservices
+    username: root
+    password: system
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+      format_sql: true
+      dialect: org.hibernate.dialect.MySQL8Dialect
+  config:
+    import: optional:configserver:http://localhost:8087
+
+server:
+  port: 8081
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userServicebreaker:
+        registerHealthIndicator: true
+        failureRateThreshold: 50  # Failure rate to open the circuit breaker
+        waitDurationInOpenState: 6s  # Time to wait before retrying (corrected to 6s)
+        slidingWindowSize: 100
+        eventConsumerBufferSize: 1
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED  # Corrected typo
+  retry:
+    instances:
+      userServicebreaker:
+        maxAttempts: 3
+        waitDuration: 5s

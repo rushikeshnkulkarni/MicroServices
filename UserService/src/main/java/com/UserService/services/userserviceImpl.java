@@ -8,6 +8,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.UserService.entity.hotel;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import lombok.Builder;
 import org.apache.commons.logging.LogFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import com.UserService.externalServices.HotelService;
 import com.UserService.repository.userRepository;
 
 @Service
+@Builder
 public class userserviceImpl implements userservice {
 
 	@Autowired
@@ -48,13 +52,16 @@ public class userserviceImpl implements userservice {
 		// TODO Auto-generated method stub
 		return userRepository.findAll();
 	}
-
+int a=1;
 	@Override
+//	@CircuitBreaker(name = "userServicebreaker",fallbackMethod = "userfallback")
+	@Retry(name = "userServicebreaker",fallbackMethod = "userfallback")
 	public User getUser(String userId) {
 		// TODO Auto-generated method stub
 		//return userRepository.findById(userId).orElseThrow(()-> new resourseNotFoundException("id is not found with id"+userId));
 		 User user  =userRepository.findById(userId).orElse(null);
-		 
+		logger.info("retry count  {} ",a);
+		a++;
 		rating[] forobjectArrayList=   restTemplate.getForObject("http://RATINGSERVICE/ratings/users/"+user.getUserId(), rating[].class);
 		 logger.info("{} ",forobjectArrayList);
 
@@ -73,6 +80,12 @@ public class userserviceImpl implements userservice {
 		 user.setRating(ratingList);
 		   return user;
 
+	}
+
+	public User userfallback(String userId, Exception ex){
+		logger.info("service is down", ex.getMessage());
+		User user =new User("", "dummy", "dummy@gmail.com", List.of());
+		return user;
 	}
 
 }
