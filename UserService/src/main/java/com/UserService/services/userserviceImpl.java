@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.UserService.entity.hotel;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.Builder;
 import org.apache.commons.logging.LogFactory;
@@ -54,8 +55,9 @@ public class userserviceImpl implements userservice {
 	}
 int a=1;
 	@Override
-//	@CircuitBreaker(name = "userServicebreaker",fallbackMethod = "userfallback")
-	@Retry(name = "userServicebreaker",fallbackMethod = "userfallback")
+	@CircuitBreaker(name = "userServicebreaker",fallbackMethod = "userfallback")
+//	@Retry(name = "userServicebreaker",fallbackMethod = "userfallback")
+//	@RateLimiter(name = "userServicebreaker",fallbackMethod = "userfallback")
 	public User getUser(String userId) {
 		// TODO Auto-generated method stub
 		//return userRepository.findById(userId).orElseThrow(()-> new resourseNotFoundException("id is not found with id"+userId));
